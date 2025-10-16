@@ -1,0 +1,195 @@
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal 
+    }
+}
+
+apply plugin: "com.android.application"
+apply plugin: "com.facebook.react"
+apply plugin: "org.jetbrains.kotlin.android"
+
+import com.android.build.OutputFile
+
+react {
+        autolinkLibrariesWithApp()
+}
+
+project.ext.react = [
+    enableHermes: true,
+    extraPackagerArgs: ["--sourcemap-output", "$buildDir/intermediates/assets/release/index.android.bundle.map"]
+]
+
+apply from: "../../node_modules/@sentry/react-native/sentry.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
+def jscFlavor = 'org.webkit:android-jsc:+'
+def enableHermes = project.ext.react.get("enableHermes", true);
+
+android {
+    signingConfigs {
+        debug {
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+    configurations {
+        all*.exclude group: 'com.android.volley'
+    }
+    configurations.all {
+        resolutionStrategy {            
+            force 'androidx.core:core-ktx:1.8.0'
+            force 'androidx.core:core:1.8.0'
+        }
+    }
+    flavorDimensions "default"
+    productFlavors {
+        rumble {
+            applicationId "com.rumble_mobile"
+            manifestPlaceholders.android_scheme = "rumbleapp"            
+        }
+        ninja {
+            applicationId "com.rumble_mobile.ninja"
+            manifestPlaceholders.android_scheme = "ninjaapp"            
+        }
+        ovdimbari {
+            applicationId "com.rumble_mobile.ovdimbari"
+            manifestPlaceholders.android_scheme = "ovdimbariapp"                        
+        }
+        clalit {
+            applicationId "com.rumble_mobile.clalit"
+            manifestPlaceholders.android_scheme = "clalitactiveapp"                        
+        }
+        maof {
+            applicationId "com.rumble_mobile.maof"
+            manifestPlaceholders.android_scheme = "maofapp"                        
+        }
+        yuvitalorg {
+            applicationId "com.rumble_mobile.yuvitalorg"
+            manifestPlaceholders.android_scheme = "yuvitalorgapp"                        
+        }
+        yuvitalhealth {
+            applicationId "com.rumble_mobile.yuvitalhealth"
+            manifestPlaceholders.android_scheme = "yuvitalhealthapp"                        
+        }
+        leumitfit {
+            applicationId "com.rumble_mobile.leumit"
+            manifestPlaceholders.android_scheme = "leumitfitapp"                        
+        }
+        cleancoin {
+            applicationId "com.rumble_mobile.cleancoin"
+            manifestPlaceholders.android_scheme = "cleancoinapp"                        
+        }
+        shebalongevity {
+            applicationId "com.rumble_mobile.sheba"
+            manifestPlaceholders.android_scheme = "shebalongevityapp"                        
+        }
+        juniorfit {
+            applicationId "com.rumble_mobile.juniorfit"
+            manifestPlaceholders.android_scheme = "juniorfitapp"                        
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    ndkVersion rootProject.ext.ndkVersion
+    compileSdk rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    namespace "com.rumble_mobile"
+    defaultConfig {
+        resValue "string", "build_config_package", "com.rumble_mobile" //needed for react-native-config to support flavors
+        applicationId "com.rumble_mobile"        
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1535480415
+        versionName "5.1.0"
+        vectorDrawables.useSupportLibrary = true
+    }    
+    packagingOptions {
+        pickFirst '**/*.so'
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            debuggable false
+            minifyEnabled false
+            setProguardFiles([getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'])
+            ndk { abiFilters 'armeabi-v7a', 'arm64-v8a' }
+        }
+    }
+    //korro assetPacks = [":korroai_react-native-unity-clalit-mushlam"]
+    //korro aaptOptions {
+        //korro noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp', '.tflite']
+    //korro }
+}
+
+dependencies {
+    implementation "androidx.core:core-ktx:1.8.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation project(':lottie-react-native')
+    implementation project(':react-native-video')
+    implementation project(':react-native-vector-icons')
+    implementation project(':react-native-config')
+    implementation project(':react-native-sound')
+    implementation project(':react-native-gesture-handler')   
+    implementation 'com.facebook.soloader:soloader:0.10.5+'
+    implementation 'com.facebook.fresco:animated-gif:3.2.0' 
+    implementation ('com.facebook.android:facebook-android-sdk:13.1.0'){
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+    }
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
+    implementation 'com.google.android.gms:play-services-base:15.0.1'   
+    implementation 'com.google.android.gms:play-services-gcm:15.0.1'
+    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.google.android.gms:play-services-fitness:21.2.0'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0' 
+    implementation 'androidx.health.connect:connect-client:1.1.0-alpha07'
+    implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation "com.facebook.react:react-native:+"
+    implementation 'com.facebook.android:facebook-login:18.0.0'
+    implementation platform('com.google.firebase:firebase-bom:30.0.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    //sency implementation 'com.sency.sencymotion:sencymotionrnbridgelib:0.0.17'
+    //sency implementation ('com.sency.sencymotion:sencymotionlib:0.0.22'){
+        //sency exclude group:'com.facebook.fbjni', module: 'fbjni-java-only'
+    //sency }
+    implementation("com.facebook.react:react-android")
+    //smkit implementation('com.sency.smkitui:smkitui:$latest_version'){
+        //smkit exclude group: 'com.facebook.fbjni', module: 'fbjni-java-only'
+    //smkit }
+    implementation "androidx.startup:startup-runtime:1.0.0"
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'    
+    implementation 'com.mcxiaoke.volley:library:1.0.19'    
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation "androidx.room:room-runtime:2.6.1"
+    annotationProcessor "androidx.room:room-compiler:2.6.1"
+    if (enableHermes) {
+        implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation jscFlavor
+    }    
+}
+
+// Run this once to be able to run the application with BUCK
+// puts all compile dependencies into folder libs for BUCK to use
+task copyDownloadableDepsToLibs(type: Copy) {
+    from configurations.implementation
+    into 'libs'
+}
+
+apply plugin: 'com.google.gms.google-services'
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

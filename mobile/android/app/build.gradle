@@ -150,7 +150,7 @@ dependencies {
     implementation ('com.facebook.android:facebook-android-sdk:13.1.0'){
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
     }
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.25'
     implementation 'com.google.android.gms:play-services-base:15.0.1'   
     implementation 'com.google.android.gms:play-services-gcm:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'

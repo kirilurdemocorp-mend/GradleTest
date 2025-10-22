@@ -175,7 +175,7 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.7.1'    
     implementation 'com.mcxiaoke.volley:library:1.0.19'    
     implementation 'com.google.code.gson:gson:2.8.9'
-    implementation "androidx.room:room-runtime:2.6.1"
+    implementation "androidx.room:room-runtime:2.8.3"
     annotationProcessor "androidx.room:room-compiler:2.6.1"
     if (enableHermes) {
         implementation("com.facebook.react:hermes-android")
